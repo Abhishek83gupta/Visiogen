@@ -21,7 +21,7 @@ const formSchema = z.object({
     .min(7, { message: "Prompt must be at least 7 characters!" }),
 });
 
-export default function page() {
+export default function Page() {
   const [outputImg, setOutputImg] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 

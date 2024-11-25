@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { BiLoaderCircle, BiDownload  } from "react-icons/bi";
 
-export default function page() {
+export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [posts, setPosts] = useState<Post[]>([]);
 
