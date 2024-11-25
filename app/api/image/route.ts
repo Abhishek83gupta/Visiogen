@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ message: "OK", image: imageURL });
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json(
