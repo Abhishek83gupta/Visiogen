@@ -1,0 +1,107 @@
+// Installation of Next project
+"npx create-next-app@latest"
+
+// Routing
+folder_name inside that must page.tsx -->
+
+// Dynamic Routing
+folder inside folder must have page.tsx file in each folder
+
+// Dynamic Segment,     Params value passed through URL 
+[folderName] --> [any_folder_name as params recieved]
+
+ex:- [id]
+{params.id}
+
+// Catch all segement
+[...segmentName]  --> catch all the route one after one in array 
+
+// Not-found(no any page exist to that path)
+// custom not-found
+In --> app --> not-found.tsx
+
+// Private folder  (will not consider in routing)
+_folderName
+
+// Route groups (its ignore in the URL)
+(folderName)
+
+//Layout
+RootLayout (by default)
+
+//Custom Layout (Nested layout)
+- create any folder in app
+- inside thata create layout.tsx
+- receive children as a prop 
+- call like 
+<div> 
+<h1>Product filter</h1>
+{children} 
+</div>
+- just like this you can create multiple layout for a specific folder
+
+// Route group layout
+- (folderName)
+- inside that normal folder 
+- create layout.tsx
+
+// Linking and Navigation
+<Link href=''></Link>(allows clientside + prefetch)
+
+// searchParams
+- is a props in next.js which allows us to extract query string specified  in URL
+
+//Link Component URL object
+
+
+// CSR and SSR
+- by default in each component in next.js is a server Component
+- 'use client' for CSR
+
+// usePathname
+const pathname = usePathname();
+
+// Data Fetching 
+
+// useRouter hook (you can directly push to another page)
+const router = useRouter();
+router.push('/login')
+
+// Suspense loading (loading component)
+<Suspense fallback={<p>Loading.....</p>}>
+</Suspense>
+
+
+
+
+
+
+
+// Prisma ORM(object relation mapping)
+
+//DB Engine
+MySQL
+PostgresSql
+SQL Server
+- you need to familiar with syntax of database
+- what happend, if you not need to care about syntax of the db whatever db you are using whether Postgres,MYSQL,SQL server you just need to know one language
+so here prisma comes in the picture
+
+// Installation
+npm i prisma
+npx prisma (give all command of prisma)
+npx prisma init (create prisma file)
+
+- by default prisma uses PostgresSQL
+
+1.Model        // Tabel
+2.Migrations   // model is transfer into real db 
+3.PrismaClient // perform CRUD operation
+
+
+// Migrate command
+npx prisma migrate dev --name any_name
+npx prisma generate
+
+// to see neon db locally
+npx prisma studio
