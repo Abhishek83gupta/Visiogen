@@ -3,9 +3,9 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/utils/authPrisma"; 
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
-  
+export async function GET(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params; 
+
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
@@ -17,9 +17,16 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     const post = await prisma.post.findUnique({
       where: {
-        id: params.id,
+        id: id, 
       },
     });
+
+    if (!post) {
+      return NextResponse.json(
+        { error: "Post not found" },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({ post });
   } catch (error) {
