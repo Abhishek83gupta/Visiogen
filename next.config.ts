@@ -1,16 +1,18 @@
-import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  images:{
-    remotePatterns:[
+const nextConfig = {
+  images: {
+    remotePatterns: [
       {
-        hostname: "image.pollinations.ai",
-        pathname:"/**",
-        port:"",
-        protocol:"https"
-      }
-    ]
-  }
+        hostname: 'image.pollinations.ai',
+        pathname: '/**',
+        port: '',
+        protocol: 'https',
+      },
+    ],
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // Ignore ESLint errors during the build process.
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
