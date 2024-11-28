@@ -12,7 +12,13 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 
 export default function Footer() {
+
+
   const router = useRouter();
+
+  const scrollToExamples = () => {
+    examplesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <footer className="w-full bg-zinc-900/50 border-t border-zinc-800 py-12 mt-auto">
       <div className="max-w-7xl mx-auto px-4">
@@ -41,11 +47,12 @@ export default function Footer() {
                   Create Image
                 </Button>
               </li>
-              {/* <li>
-                <Link href="/examples" className="hover:text-purple-400 transition-colors">
+              <li>
+                <Link href="#examples" className="hover:text-purple-400 transition-colors">
                   Examples
                 </Link>
-              </li> */}
+                
+              </li>
               <li>
                 <Link
                   href="/profile"
