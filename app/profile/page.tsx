@@ -3,8 +3,9 @@
 import { Post } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { BiLoaderCircle, BiDownload  } from "react-icons/bi";
+import { BiLoaderCircle, BiDownload } from "react-icons/bi";
 
 export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,22 +25,7 @@ export default function Page() {
     }
   };
 
-  const downloadImage = async (imageUrl: string, prompt: string) => {
-    try {
-      const response = await fetch(imageUrl)
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `${prompt.slice(0, 20)}.png`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error('Error downloading image:', error)
-    }
-  }
+  const router = useRouter();
 
   useEffect(() => {
     fetchposts();
@@ -49,37 +35,33 @@ export default function Page() {
     <div className="w-full min-h-dvh p-3 pt-[72px] grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-3">
       {loading ? (
         <div className="col-span-full flex justify-center items-center">
-          <BiLoaderCircle className="animate-spin text-3xl md:text-3xl lg:text-5xl" />
+          <BiLoaderCircle className="animate-spin text-3xl md:text-3xl lg:text-5xl text-purple-400" />
         </div>
       ) : (
         <AnimatePresence mode="wait">
-          {posts.map((post,index) => {
+          {posts.map((post, index) => {
             return (
               <motion.div
-              initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ duration: 0.35, delay: index * 0.05 }}
-              className="w-full h-full p-2 border rounded-lg bg-card"
-              key={post.id}
-            >
-              <div className="relative group">
-                <Image
-                  alt={post.prompt}
-                  src={post.url}
-                  width={250}
-                  height={250}
-                  className="w-full object-contain rounded-md"
-                />
-                <button
-                  onClick={() => downloadImage(post.url, post.prompt)}
-                  className="absolute top-2 right-2 p-2 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  aria-label={`Download image: ${post.prompt}`}
-                >
-                  <BiDownload className="text-white w-6 h-6" />
-                </button>
-              </div>
-              <p className="text-card-foreground mt-2 text-sm line-clamp-2">{post.prompt}</p>
-            </motion.div>
+                initial={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                transition={{ duration: 0.35, delay: index * 0.05 }}
+                className="w-full h-full p-2 border rounded-lg bg-card cursor-pointer hover:border-purple-400/50 transition-colors"
+                key={post.id}
+                onClick={() => router.push(`/profile/${post.id}`)}
+              >
+                <div className="relative group aspect-square">
+                  <Image
+                    alt={post.prompt}
+                    src={post.url}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover rounded-md"
+                  />
+                </div>
+                <p className="text-card-foreground mt-2 text-sm line-clamp-2">
+                  {post.prompt}
+                </p>
+              </motion.div>
             );
           })}
         </AnimatePresence>

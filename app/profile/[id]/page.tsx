@@ -53,7 +53,7 @@ export default function ImageDetail({ params }: { params: { id: string } }) {
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center pt-[60px]">
-        <BiLoaderCircle className="animate-spin text-4xl text-purple-400" />
+        <BiLoaderCircle className="animate-spin text-3xl md:text-3xl lg:text-5xl text-purple-400" />
       </div>
     );
   }
