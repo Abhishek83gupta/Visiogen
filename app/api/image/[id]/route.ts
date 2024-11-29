@@ -1,13 +1,13 @@
 import prisma from "@/utils/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "@/utils/authPrisma"; 
+import { authOptions } from "@/utils/authPrisma";
 
 export async function GET(
   request: Request,
-  context: { params: Record<string, string> } 
+  { params }: { params: { id: string } } 
 ) {
-  const { id } = context.params;
+  const { id } = params;
 
   try {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function GET(
 
     const post = await prisma.post.findUnique({
       where: {
-        id: id, 
+        id: id,
       },
     });
 
