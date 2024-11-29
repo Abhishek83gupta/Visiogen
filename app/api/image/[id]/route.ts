@@ -3,8 +3,11 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/utils/authPrisma"; 
 
-export async function GET(request: Request, context: { params: { id: string } }) {
-  const { id } = context.params; 
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } } 
+) {
+  const { id } = params;
 
   try {
     const session = await getServerSession(authOptions);
