@@ -5,9 +5,9 @@ import { authOptions } from "@/utils/authPrisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } } 
+  context: { params: Record<string, string> } 
 ) {
-  const { id } = params;
+  const { id } = context.params;
 
   try {
     const session = await getServerSession(authOptions);
