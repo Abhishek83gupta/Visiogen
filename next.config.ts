@@ -1,9 +1,8 @@
-
 const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'image.pollinations.ai',
+        hostname: process.env.NEXT_PUBLIC_POLLINATIONS_HOSTNAME,
         pathname: '/**',
         port: '',
         protocol: 'https',
@@ -12,6 +11,9 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true, // Ignore ESLint errors during the build process.
+  },
+  experimental: {
+    typedRoutes: true,
   },
 };
 
