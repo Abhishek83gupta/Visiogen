@@ -2,12 +2,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'image.pollinations.ai',
+        hostname: process.env.NEXT_PUBLIC_POLLINATIONS_HOSTNAME,
         pathname: '/**',
         port: '',
         protocol: 'https',
       },
-    ],
+    ]
   },
   eslint: {
     ignoreDuringBuilds: true, 
