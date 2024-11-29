@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
   }
   const randomSeed = generateRandomNumber();
 
-  const imageURL = `${process.env.API_URL}${encodeURIComponent(
+  const imageURL = `${process.env.API_URL}/${encodeURIComponent(
     prompt
   )}?seed=${randomSeed}&width=${ratio.width}&height=${ratio.height}&nologo=true&model=${model}&enhance=true`;
 
