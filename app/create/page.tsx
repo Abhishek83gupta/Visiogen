@@ -163,6 +163,7 @@ export default function Page() {
         description: "Failed to generate image. Please try again.",
         variant: "destructive",
       });
+      console.log(error);
     } finally {
       setLoading(false);
     }
