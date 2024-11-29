@@ -29,74 +29,81 @@ const allowedModels = [
 ];
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!session) {
-    return NextResponse.json({ error: "You are Unauthorized" }, { status: 401 });
-  }
+    if (!session) {
+      return NextResponse.json({ error: "You are Unauthorized" }, { status: 401 });
+    }
 
-  const { prompt, model, aspectRatio } = await req.json();
+    const { prompt, model, aspectRatio } = await req.json();
 
-  if (!prompt || !model || !aspectRatio) {
+    if (!prompt || !model || !aspectRatio) {
+      return NextResponse.json(
+        { error: "Prompt, model, and aspect ratio are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!allowedModels.includes(model)) {
+      return NextResponse.json({ error: "Invalid model selected." }, { status: 400 });
+    }
+
+    const ratio = aspectRatios[aspectRatio as AspectRatioKey];
+    if (!ratio) {
+      return NextResponse.json(
+        { error: "Invalid aspect ratio selected." },
+        { status: 400 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: session.user.id,
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "No user found" }, { status: 401 });
+    }
+
+    const randomSeed = Math.floor(Math.random() * 1000);
+    const imageURL = `${process.env.API_URL}${encodeURIComponent(
+      prompt
+    )}?seed=${randomSeed}&width=${ratio.width}&height=${ratio.height}&nologo=true&model=${model}&enhance=true`;
+
+    const imageResponse = await fetch(imageURL);
+
+    // If API fails
+    if (!imageResponse.ok) {
+      return NextResponse.json(
+        { error: "Failed to generate image. Please try again." },
+        { status: 500 }
+      );
+    }
+
+    
+    await prisma.post.create({
+      data: {
+        prompt,
+        url: imageURL,
+        seed: randomSeed,
+        userId: user.id,
+        model: model,
+        aspectRatio: aspectRatio,
+      },
+    });
+
+    return NextResponse.json({ message: "OK", image: imageURL });
+  } catch (error) {
+    console.error("Error in image generation API:", error);
     return NextResponse.json(
-      { error: "Prompt, model, and aspect ratio are required." },
-      { status: 400 }
-    );
-  }
-
-  if (!allowedModels.includes(model)) {
-    return NextResponse.json({ error: "Invalid model selected." }, { status: 400 });
-  }
-
-  const ratio = aspectRatios[aspectRatio as AspectRatioKey];
-  if (!ratio) {
-    return NextResponse.json(
-      { error: "Invalid aspect ratio selected." },
-      { status: 400 }
-    );
-  }
-
-  const user = await prisma.user.findUnique({
-    where: {
-      id: session.user.id,
-    },
-  });
-
-  if (!user) {
-    return NextResponse.json({ error: "No user found" }, { status: 401 });
-  }
-
-  function generateRandomNumber(): number {
-    return Math.floor(Math.random() * 1000);
-  }
-  const randomSeed = generateRandomNumber();
-  const imageURL = `https://image.pollinations.ai/prompt/${encodeURIComponent(
-    prompt
-  )}?seed=${randomSeed}&width=${ratio.width}&height=${ratio.height}&nologo=true&model=${model}&enhance=true`;
-
-  // Fetch the image to validate the request (optional)
-  const imageResponse = await fetch(imageURL);
-  if (!imageResponse.ok) {
-    return NextResponse.json(
-      { error: "Failed to generate image. Please try again." },
+      { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
     );
   }
-
-  // Store the generated image URL and metadata in the database
-  await prisma.post.create({
-    data: {
-      prompt,
-      url: imageURL,
-      seed: randomSeed,
-      userId: user.id,
-      model : model,
-      aspectRatio : aspectRatio
-    },
-  });
-
-  return NextResponse.json({ message: "OK", image: imageURL });
 }
+
 
 export async function GET() {
   // Getting the user's session
