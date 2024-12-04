@@ -8,13 +8,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BiLoaderCircle } from "react-icons/bi";
 import LogoIcon from "./logo";
 import { motion } from "framer-motion";
+import { useRouter } from 'next/navigation'
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const [initialLoading, setInitialLoading] = useState<boolean>(true);
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/" }); 
+    router.push("/"); 
   };
 
   useEffect(() => {
@@ -24,7 +36,7 @@ export default function Header() {
   }, [status, session]);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className="fixed top-0 w-full h-[60px] bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 px-4 flex justify-between items-center z-50"
@@ -40,31 +52,38 @@ export default function Header() {
         {initialLoading && status === "loading" ? (
           <BiLoaderCircle className="animate-spin text-purple-400" />
         ) : !session ? (
-          <Button 
+          <Button
             onClick={() => signIn()}
             className="bg-purple-500 hover:bg-purple-600 text-white transition-colors"
           >
             Login
           </Button>
         ) : (
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              onClick={handleLogout}
-              className="text-white hover:text-red-400 transition-colors"
-            >
-              Logout
-            </Button>
-
-            <Link href="/profile">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
               <Avatar className="border-2 border-purple-400/20 hover:border-purple-400/40 transition-colors">
                 <AvatarImage src={session.user?.image || ""} />
                 <AvatarFallback className="bg-purple-500/10 text-purple-400">
-                  {session.user?.name?.charAt(0) || 'U'}
+                  {session.user?.name?.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
-            </Link>
-          </div>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                {/* Profile Link */}
+                <Link href="/profile">
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {/* Logout Link with handleLogout */}
+                <button onClick={handleLogout} className="w-full text-left">
+                  Logout
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
     </motion.div>
