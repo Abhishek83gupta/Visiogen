@@ -100,22 +100,25 @@ export default function Page() {
       });
       return;
     }
-  
+
     try {
       setIsEnhancing(true);
       const aiPrompt = `Act as an AI art prompt expert. Enhance this prompt by adding more details about style, lighting, mood, and composition, while maintaining the original idea: "${currentPrompt}". Make it more descriptive and artistic, but keep it concise.`;
-      
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/${encodeURIComponent(aiPrompt)}`
       );
       const enhancedText = await response.text();
-  
+
       if (enhancedText && enhancedText.length > currentPrompt.length) {
         // Clean up the response by removing any potential AI conversation artifacts
         const cleanedText = enhancedText
-          .replace(/^(As an AI art prompt expert,|Here's the enhanced prompt:|Enhanced version:|I would enhance it to:)/i, '')
+          .replace(
+            /^(As an AI art prompt expert,|Here's the enhanced prompt:|Enhanced version:|I would enhance it to:)/i,
+            ""
+          )
           .trim();
-  
+
         form.setValue("prompt", cleanedText);
         toast({
           title: "Success",
@@ -215,7 +218,7 @@ export default function Page() {
                           <div className="relative">
                             <Input
                               placeholder="E.g., A serene landscape with mountains at sunset, digital art style"
-                              className="h-12 lg:h-14 resize-none py-2 bg-zinc-800/50 pr-24"
+                              className="h-12 lg:h-14 resize-none py-2 bg-zinc-800/50 pr-12" 
                               {...field}
                             />
                             <Button
@@ -225,13 +228,13 @@ export default function Page() {
                               className="absolute right-2 top-2 text-purple-400 hover:text-purple-300"
                               onClick={enhancePrompt}
                               disabled={isEnhancing || field.value.length < 7}
+                              title="Enhance prompt by AI" // Tooltip on hover
                             >
                               {isEnhancing ? (
                                 <BiLoaderCircle className="w-4 h-4 animate-spin" />
                               ) : (
                                 <IconWand className="w-4 h-4" />
                               )}
-                              <span className="ml-2">Enhance</span>
                             </Button>
                           </div>
                         </div>
