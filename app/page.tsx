@@ -14,26 +14,12 @@ import {
   IconQuote,
 } from "@tabler/icons-react";
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  const targetRef = useRef<HTMLDivElement>(null);
-  const examplesRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ["start start", "end start"],
-  });
-
-  // Smooth scroll function
-  const scrollToExamples = () => {
-    examplesRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
-    <div
-      className="w-full min-h-screen flex flex-col items-center px-4 py-20 bg-gradient-to-b from-zinc-900 to-black overflow-hidden"
-      ref={targetRef}
-    >
+    <div className="w-full min-h-screen flex flex-col items-center px-4 py-20 bg-gradient-to-b from-zinc-900 to-black overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 left-0 w-full h-full bg-gradient-to-b from-purple-500/20 to-transparent blur-3xl animate-pulse" />
@@ -68,13 +54,14 @@ export default function Home() {
               Start creating <IconArrowRight className="w-5 h-5" />
             </Button>
           </Link>
-          <Button
-            onClick={scrollToExamples}
-            variant="outline"
-            className="w-auto sm:w-auto px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg border-zinc-700 hover:bg-zinc-800 text-white flex items-center justify-center"
-          >
-            View examples
-          </Button>
+          <Link href="/#examples">
+            <Button
+              variant="outline"
+              className="w-auto sm:w-auto px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg border-zinc-700 hover:bg-zinc-800 text-white flex items-center justify-center"
+            >
+              View examples
+            </Button>
+            </Link>
         </div>
       </motion.div>
       <motion.div
@@ -148,7 +135,6 @@ export default function Home() {
         transition={{ delay: 1 }}
         className="mt-32 text-center relative w-full max-w-6xl px-4 sm:px-6 lg:px-8 mx-auto"
         id="examples"
-        ref={examplesRef} // Attach the ref to the examples section
       >
         <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-white">
           Stunning Examples
@@ -251,18 +237,10 @@ function StepCard({
 }
 
 function ExampleImage({ src, alt }: { src: string; alt: string }) {
-  const examplesRef = useRef<HTMLDivElement>(null);
-
-  // Smooth scroll function
-  const scrollToExamples = () => {
-    examplesRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
       className="relative aspect-square rounded-lg overflow-hidden transition-transform duration-300"
-      onClick={scrollToExamples} // Trigger smooth scroll on click
     >
       <Image
         src={src}
