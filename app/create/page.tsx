@@ -30,6 +30,7 @@ import {
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { BiLoaderCircle } from "react-icons/bi";
+import { Sparkles } from "lucide-react";
 
 const formSchema = z.object({
   prompt: z
@@ -232,12 +233,12 @@ export default function Page() {
                               className="absolute right-2 top-2 text-purple-400 hover:text-purple-300"
                               onClick={enhancePrompt}
                               disabled={isEnhancing || field.value.length < 7}
-                              title="Enhance prompt by AI" // Tooltip on hover
+                              title="Enhance prompt by AI"
                             >
                               {isEnhancing ? (
                                 <BiLoaderCircle className="w-4 h-4 animate-spin" />
                               ) : (
-                                <IconWand className="w-4 h-4" />
+                                <Sparkles className="w-4 h-4" />
                               )}
                             </Button>
                           </div>
