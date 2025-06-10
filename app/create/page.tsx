@@ -96,56 +96,64 @@ export default function Page() {
   });
 
   const enhancePrompt = async () => {
-    const currentPrompt = form.getValues("prompt");
-    if (currentPrompt.length < 7) {
-      toast({
-        title: "Error",
-        description: "Prompt must be at least 7 characters long to enhance.",
-        variant: "destructive",
-      });
-      return;
+  const currentPrompt = form.getValues("prompt");
+  if (currentPrompt.length < 7) {
+    toast({
+      title: "Error",
+      description: "Prompt must be at least 7 characters long to enhance.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  try {
+    setIsEnhancing(true);
+    
+    const response = await fetch("/api/prompt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt: currentPrompt }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to enhance prompt");
     }
 
-    try {
-      setIsEnhancing(true);
-      const aiPrompt = `Act as an AI art prompt expert. Enhance this prompt by adding more details about style, lighting, mood, and composition, while maintaining the original idea: "${currentPrompt}". Make it more descriptive and artistic, but keep it concise.`;
+    if (data.enhancedPrompt && data.enhancedPrompt.length > currentPrompt.length) {
+      // Clean up the response by removing any potential AI conversation artifacts
+      const cleanedText = data.enhancedPrompt
+        .replace(
+          /^(As an AI art prompt expert,|Here's the enhanced prompt:|Enhanced version:|I would enhance it to:)/i,
+          ""
+        )
+        .trim();
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/${encodeURIComponent(aiPrompt)}`
-      );
-      const enhancedText = await response.text();
-
-      if (enhancedText && enhancedText.length > currentPrompt.length) {
-        // Clean up the response by removing any potential AI conversation artifacts
-        const cleanedText = enhancedText
-          .replace(
-            /^(As an AI art prompt expert,|Here's the enhanced prompt:|Enhanced version:|I would enhance it to:)/i,
-            ""
-          )
-          .trim();
-
-        form.setValue("prompt", cleanedText);
-        toast({
-          title: "Success",
-          description: "Prompt has been enhanced with artistic details.",
-          variant: "default",
-        });
-      } else {
-        toast({
-          title: "Notice",
-          description: "No significant enhancement possible for this prompt.",
-          variant: "default",
-        });
-      }
-    } catch (error) {
+      form.setValue("prompt", cleanedText);
       toast({
-        title: "Error",
-        description: "Failed to enhance prompt. Please try again.",
-        variant: "destructive",
+        title: "Success",
+        description: "Prompt has been enhanced with artistic details.",
+        variant: "default",
       });
-    } finally {
-      setIsEnhancing(false);
+    } else {
+      toast({
+        title: "Notice",
+        description: "No significant enhancement possible for this prompt.",
+        variant: "default",
+      });
     }
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Failed to enhance prompt. Please try again.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsEnhancing(false);
+  }
   };
 
   async function onSubmit(values: FormValues) {
