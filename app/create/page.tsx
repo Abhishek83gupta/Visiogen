@@ -105,7 +105,7 @@ export default function Page() {
         form.setValue("prompt", cleanedText, { shouldValidate: true });
         toast({
           title: "Prompt Enhanced",
-          description: "Your prompt has been enriched with artistic details.",
+          description: "Your prompt has been enhanced with details.",
         });
       }
     } catch (error) {
@@ -122,7 +122,7 @@ export default function Page() {
   async function onSubmit(values: FormValues) {
     setLoading(true);
     try {
-      // --- REFACTORED: Use .find() to get the style object ---
+      // find() to get the style object
       const selectedStyle = styleOptions.find(style => style.id === values.style);
       // Fallback in case style is not found, although validation should prevent this.
       const styleName = selectedStyle ? selectedStyle.name : ''; 
