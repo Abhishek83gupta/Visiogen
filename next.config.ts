@@ -1,5 +1,6 @@
 const nextConfig = {
   images: {
+    domains: ['res.cloudinary.com'],
     remotePatterns: [
       {
         hostname: process.env.NEXT_PUBLIC_HOSTNAME,
@@ -14,9 +15,6 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-  experimental: {
-    typedRoutes: true,
   },
 };
 

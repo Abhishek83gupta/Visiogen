@@ -42,7 +42,7 @@ export default function Header() {
       className="fixed top-0 w-full h-[60px] bg-zinc-900/80 backdrop-blur-sm border-b border-zinc-800 px-4 flex justify-between items-center z-50"
     >
       <Link href="/" className="flex items-center gap-3">
-        <LogoIcon className="w-8 h-8 text-purple-400" />
+        <LogoIcon/>
         <h2 className="font-bold text-xl">
           Visio<span className="text-purple-400">gen AI</span>
         </h2>
@@ -72,7 +72,7 @@ export default function Header() {
             <DropdownMenuContent>
               <DropdownMenuItem>
                 {/* Profile Link */}
-                <Link href="/profile">
+                <Link href="/profile" className="w-full text-left">
                   Profile
                 </Link>
               </DropdownMenuItem>
