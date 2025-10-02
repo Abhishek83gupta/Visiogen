@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     }
 
     const randomSeed = Math.floor(Math.random() * 1000);
-    const API = process.env.API_URL;
+    const API = process.env.IMAGE_API_URL;
     const imageURL = `${API}${encodeURIComponent(
       prompt
     )}?seed=${randomSeed}&width=${ratio.width}&height=${ratio.height}&nologo=true&model=${model}&enhance=true`;
@@ -93,8 +93,6 @@ export async function POST(req: NextRequest) {
 
     // This is the permanent, secure URL for your image.
     const permanentImageUrl = uploadResult.secure_url;
-
-    console.log(permanentImageUrl);
 
     // If API fails
     if (!imageResponse.ok) {
@@ -116,7 +114,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ message: "OK", image: imageURL });
+    return NextResponse.json({ message: "OK", image: permanentImageUrl });
   } catch (error) {
     console.error("Error in image generation API:", error);
     return NextResponse.json(
