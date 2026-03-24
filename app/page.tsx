@@ -19,12 +19,19 @@ import { useState, useEffect } from "react";
 export default function Home() {
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center px-4 py-20 bg-gradient-to-b from-zinc-900 to-black overflow-hidden">
+    <div
+      className="w-full min-h-screen flex flex-col items-center px-4 py-20 bg-gradient-to-b from-zinc-900 to-black overflow-hidden"
+    >
+      {/* Background Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+
+      {/* Animated background gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 left-0 w-full h-full bg-gradient-to-b from-purple-500/20 to-transparent blur-3xl animate-pulse" />
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-b from-pink-500/20 to-transparent blur-3xl animate-pulse delay-150" />
       </div>
+
+      {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -64,6 +71,8 @@ export default function Home() {
             </Link>
         </div>
       </motion.div>
+
+      {/* Features Grid */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -101,6 +110,8 @@ export default function Home() {
           description="Create amazing images without any cost"
         />
       </motion.div>
+
+      {/* Process Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -129,6 +140,8 @@ export default function Home() {
           />
         </div>
       </motion.div>
+
+      {/* Examples Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -151,6 +164,8 @@ export default function Home() {
           <ExampleImage src="/img6.png" alt="Example 6" />
         </div>
       </motion.div>
+
+      {/* Testimonials Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -166,6 +181,8 @@ export default function Home() {
         </p>
         <TestimonialSlider />
       </motion.div>
+
+      {/* CTA Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

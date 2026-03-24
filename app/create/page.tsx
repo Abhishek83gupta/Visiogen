@@ -42,11 +42,8 @@ const aspectRatioOptions = [
 ];
 
 const modelOptions = [
-  { id: "flux-pro", name: "Flux Pro", desc: "Premium quality, enhanced details" },
-  { id: "flux.Schnell", name: "Flux Schnell", desc: "Best overall quality & coherence" },
-  { id: "flux", name: "Flux", desc: "Fast and reliable generation" },
-  { id: "turbo", name: "Turbo", desc: "Quick generation, good quality" },
-  { id: "mistral", name: "Mistral", desc: "Artistic and creative outputs" },
+  { id: "flux", name: "Flux Schnell" },
+  { id: "zimage", name: "Z-Image Turbo" },
 ];
 
 const styleOptions = [

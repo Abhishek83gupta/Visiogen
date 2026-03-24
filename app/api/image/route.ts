@@ -22,16 +22,8 @@ const aspectRatioOptions = [
 ];
 
 const allowedModels = [
-  "flux.Schnell",
-  "flux",
-  // "flux-realism",
-  // "flux-cablyai",
-  // "flux-anime",
-  // "flux-3d",
-  // "any-dark",
-  "flux-pro",
-  "turbo",
-  "mistral"
+  "flux",   
+  "zimage",  
 ];
 
 export async function POST(req: NextRequest) {
@@ -75,32 +67,46 @@ export async function POST(req: NextRequest) {
     }
 
     const randomSeed = Math.floor(Math.random() * 1000);
-    const API = process.env.IMAGE_API_URL;
+    const API = process.env.POLLINATIONS_API_URL; 
+    const apiKey = process.env.POLLINATIONS_SECRET_KEY;
     const imageURL = `${API}${encodeURIComponent(
       prompt
     )}?seed=${randomSeed}&width=${ratio.width}&height=${ratio.height}&nologo=true&model=${model}&enhance=true`;
 
-    const imageResponse = await fetch(imageURL);
-    
-    const uploadResult = await cloudinary.uploader.upload(imageURL, {
-      folder: "ai-generated-images", 
+    // Fetch the image ourselves with the auth header
+    const imageResponse = await fetch(imageURL, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
     });
 
-    // Check if the upload was successful and we have a secure URL
-    if (!uploadResult.secure_url) {
-      return NextResponse.json({ error: "Failed to store generated image." }, { status: 500 });
-    }
-
-    // This is the permanent, secure URL for your image.
-    const permanentImageUrl = uploadResult.secure_url;
-
-    // If API fails
+    // Fail fast
     if (!imageResponse.ok) {
+      console.error("Pollinations error:", imageResponse.status, await imageResponse.text());
       return NextResponse.json(
         { error: "Failed to generate image. Please try again." },
         { status: 500 }
       );
     }
+
+    // Convert the response to a Buffer so Cloudinary never needs to
+    // re-fetch the URL (which would fail without auth)
+    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+
+    // Upload the buffer to Cloudinary via upload_stream
+    const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "ai-generated-images" },
+        (error, result) => {
+          if (error || !result) return reject(error ?? new Error("Cloudinary upload failed"));
+          resolve(result as { secure_url: string });
+        }
+      );
+      stream.end(imageBuffer);
+    });
+
+    // This is the permanent, secure URL for your image.
+    const permanentImageUrl = uploadResult.secure_url;
 
     
     await prisma.post.create({
