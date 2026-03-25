@@ -13,16 +13,11 @@ export async function POST(req: Request) {
 
     const aiPrompt = `Act as an AI art prompt expert specializing in ${style} style. Enhance this: "${prompt}". Add vivid details for lighting, mood, and composition. Return only the enhanced prompt, no extra text or special characters.`;
 
-    const apiKey = process.env.POLLINATIONS_SECRET_KEY;
-    const baseUrl = process.env.TEXT_API_URL || "https://gen.pollinations.ai";
-
-    // Use the POST /v1/chat/completions endpoint — avoids URL length limits
-    // and is more reliable than the GET /text/{prompt} endpoint
-    const response = await fetch(`${baseUrl}/v1/chat/completions`, {
+    const response = await fetch(`${process.env.TEXT_API_URL}/v1/chat/completions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${process.env.POLLINATIONS_SECRET_KEY}`,
       },
       body: JSON.stringify({
         model: "openai",

@@ -9,14 +9,15 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-export default function ImageDetail({ params }: { params: { id: string } }) {
+export default function ImageDetail({ params }: { params: Promise<{ id: string }> }) {
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const fetchPost = async () => {
     try {
-      const response = await fetch(`/api/image/${params.id}`);
+      const { id } = await params;
+      const response = await fetch(`/api/image/${id}`);
       console.log(response);
       
       const data = await response.json();
@@ -30,7 +31,7 @@ export default function ImageDetail({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     fetchPost();
-  }, [params.id]);
+  }, [params]);
 
   const downloadImage = async () => {
     if (!post) return;
