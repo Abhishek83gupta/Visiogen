@@ -122,10 +122,10 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-zinc-800 text-center text-sm text-zinc-400">
-          <p className="flex items-center justify-center gap-1">
+          {/* <p className="flex items-center justify-center gap-1">
             Made with <IconHeart className="w-4 h-4 text-red-400" /> by Abhishek
             Gupta
-          </p>
+          </p> */}
           <p className="mt-2">
             © {new Date().getFullYear()} Visiogen. All rights reserved.
           </p>
